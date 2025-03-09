@@ -1,0 +1,35 @@
+name: NestJS Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'back/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'back/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: back/package-lock.json
+
+      - name: Install dependencies
+        working-directory: back
+        run: npm ci
+
+      - name: Run tests
+        working-directory: back
+        run: npm run test
