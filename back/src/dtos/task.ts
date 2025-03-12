@@ -11,4 +11,6 @@ export class TaskDTO {
   createdAt?: Date;
   @ApiProperty({ description: 'The update date of the task' })
   updatedAt?: Date;
+  //atualizar
+
 }
