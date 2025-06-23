@@ -11,7 +11,7 @@ terraform {
   }
 
   backend "gcs" {
-    bucket = "terraform-cris-backend" # crie manualmente
+    bucket = "terraform-cris-backend"
     prefix = "terraform/production"
   }
 }
@@ -20,6 +20,7 @@ provider "google" {
   project = var.project_id
   region  = var.region
   zone    = var.zone
+  credentials = file("${path.module}/../../credentials/terraform-deployer.json")
 }
 
 provider "kubernetes" {
@@ -28,13 +29,8 @@ provider "kubernetes" {
   token                  = data.google_client_config.default.access_token
 }
 
-provider "helm" {
-  kubernetes {
-    host                   = google_container_cluster.primary.endpoint
-    cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
-    token                  = data.google_client_config.default.access_token
-  }
-}
+provider "helm" {}
+
 
 data "google_client_config" "default" {}
 

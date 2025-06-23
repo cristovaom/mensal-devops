@@ -1,4 +1,3 @@
-# modules/gke/main.tf
 resource "google_container_cluster" "primary" {
   name     = var.name
   location = var.region
@@ -10,7 +9,7 @@ resource "google_container_cluster" "primary" {
   subnetwork = var.subnetwork
 
   workload_identity_config {
-    identity_namespace = "${var.project}.svc.id.goog"
+    workload_pool = "${var.project}.svc.id.goog"
   }
 
   addons_config {
@@ -18,19 +17,4 @@ resource "google_container_cluster" "primary" {
       disabled = false
     }
   }
-}
-
-resource "google_container_node_pool" "primary_nodes" {
-  cluster = google_container_cluster.primary.name
-  name    = "default-node-pool"
-  location = var.region
-
-  node_config {
-    machine_type = "e2-medium"
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
-  }
-
-  initial_node_count = 3
 }

@@ -1,0 +1,5 @@
+project_id = "seu-id-do-projeto"
+region     = "us-central1"
+zone       = "us-central1-a"
+network    = "default"
+subnetwork = "default"
