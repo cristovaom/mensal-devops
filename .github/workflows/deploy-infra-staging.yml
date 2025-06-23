@@ -2,10 +2,10 @@ name: Deploy Infraestrutura - Staging
 
 on:
   push:
-    paths:
-      - "infra/staging/**"
     branches:
       - main
+    paths:
+      - "infra/envs/staging/**"
 
 jobs:
   terraform:
@@ -25,12 +25,12 @@ jobs:
 
       - name: Inicializar Terraform
         run: terraform init
-        working-directory: infra/staging
+        working-directory: infra/envs/staging
 
       - name: Validar Terraform
         run: terraform validate
-        working-directory: infra/staging
-        
+        working-directory: infra/envs/staging
+
       - name: Aplicar Terraform
         run: terraform apply -auto-approve -var="google_credentials_json=${{ secrets.GCP_CREDENTIALS_STAGING }}"
-        working-directory: infra/staging
+        working-directory: infra/envs/staging

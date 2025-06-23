@@ -2,10 +2,10 @@ name: Deploy Infraestrutura - Production
 
 on:
   push:
-    paths:
-      - "infra/production/**"
     branches:
       - main
+    paths:
+      - "infra/envs/production/**"
 
 jobs:
   terraform:
@@ -25,13 +25,12 @@ jobs:
 
       - name: Inicializar Terraform
         run: terraform init
-        working-directory: infra/production
+        working-directory: infra/envs/production
 
       - name: Validar Terraform
         run: terraform validate
-        working-directory: infra/production
+        working-directory: infra/envs/production
 
       - name: Aplicar Terraform
         run: terraform apply -auto-approve -var="google_credentials_json=${{ secrets.GCP_CREDENTIALS_PRODUCTION }}"
-        working-directory: infra/production
-
+        working-directory: infra/envs/production

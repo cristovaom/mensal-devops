@@ -2,10 +2,10 @@ name: Deploy Aplicação - Staging
 
 on:
   push:
-    paths:
-      - "app/**"
     branches:
       - main
+    paths:
+      - "app/**"
 
 jobs:
   build-and-deploy:
