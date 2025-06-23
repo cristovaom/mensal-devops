@@ -17,10 +17,10 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
-  region  = var.region
-  zone    = var.zone
-  credentials = file("${path.module}/../../credentials/terraform-deployer.json")
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
+  credentials = var.google_credentials_json
 }
 
 provider "kubernetes" {

@@ -26,3 +26,8 @@ variable "subnetwork" {
   type        = string
   default     = "default"
 }
+
+variable "google_credentials_json" {
+  description = "Credenciais do GCP em JSON"
+  type        = string
+}
