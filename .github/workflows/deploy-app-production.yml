@@ -22,16 +22,13 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_PRODUCTION }}
 
+      - name: Autenticar Docker com GCR
+        run: gcloud auth configure-docker --quiet
+
       - name: Build e Push da imagem para o GCR
         run: |
           IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID_PRODUCTION }}/app-production:latest
           docker build -t $IMAGE_NAME ./back
-          docker push $IMAGE_NAME
-
-      - name: Build e Push da imagem do frontend
-        run: |
-          IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID_PRODUCTION }}/app-frontend:latest
-          docker build -t $IMAGE_NAME ./front
           docker push $IMAGE_NAME
 
       - name: Setar contexto do cluster
