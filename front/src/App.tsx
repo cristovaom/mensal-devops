@@ -12,6 +12,7 @@ function App() {
   const [currentData, setCurrentData] = useState<{name: string, description: string}>({
     name: '',
     description: ''
+    
   })
 
   useEffect(() => {
