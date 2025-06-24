@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ${{ secrets.DOCKER_USERNAME }}/app-staging:latest
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID_STAGING }}/app-staging:latest
           ports:
             - containerPort: 3000
 ---
