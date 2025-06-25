@@ -47,15 +47,9 @@ provider "kubernetes" {
   token                  = data.google_client_config.default.access_token
 }
 
-# PROVIDER HELM (usando alias e referenciando o provider Kubernetes acima)
+# PROVIDER HELM (usando o alias corretamente, sem bloco kubernetes interno)
 provider "helm" {
   alias = "gke"
-
-  kubernetes {
-    host                   = module.gke.endpoint
-    cluster_ca_certificate = base64decode(module.gke.cluster_ca_certificate)
-    token                  = data.google_client_config.default.access_token
-  }
 }
 
 # MÓDULO MONITORAMENTO
