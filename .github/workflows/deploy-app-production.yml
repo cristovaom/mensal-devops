@@ -6,9 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -21,6 +18,12 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: 'latest'
+
+      - name: Instalar gke-gcloud-auth-plugin manualmente
+        run: |
+          curl -Lo gke-gcloud-auth-plugin https://storage.googleapis.com/artifacts.gke.io/gke-gcloud-auth-plugin/latest/gke-gcloud-auth-plugin-linux-amd64
+          chmod +x gke-gcloud-auth-plugin
+          sudo mv gke-gcloud-auth-plugin /usr/local/bin/
 
       - name: Autenticar no GCP
         uses: google-github-actions/auth@v1
