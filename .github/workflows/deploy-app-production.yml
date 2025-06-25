@@ -14,8 +14,10 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v3
 
-      - name: Instalar Docker
-        uses: docker/setup-buildx-action@v2
+      - name: Instalar Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
 
       - name: Autenticar no GCP
         uses: google-github-actions/auth@v1
@@ -30,13 +32,10 @@ jobs:
           IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID_PRODUCTION }}/app-production:latest
           docker build -t $IMAGE_NAME ./back
           docker push $IMAGE_NAME
-      - name: Instalar gke-gcloud-auth-plugin
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          version: 'latest'
+
       - name: Setar contexto do cluster
         run: |
           gcloud container clusters get-credentials gke-production --region us-central1 --project ${{ secrets.GCP_PROJECT_ID_PRODUCTION }}
-      
+
       - name: Aplicar Manifests
         run: kubectl apply -f k8s/deployment-production.yml
