@@ -19,12 +19,6 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Instalar gke-gcloud-auth-plugin manualmente
-        run: |
-          curl -Lo gke-gcloud-auth-plugin https://storage.googleapis.com/artifacts.gke.io/gke-gcloud-auth-plugin/latest/gke-gcloud-auth-plugin-linux-amd64
-          chmod +x gke-gcloud-auth-plugin
-          sudo mv gke-gcloud-auth-plugin /usr/local/bin/
-
       - name: Autenticar no GCP
         uses: google-github-actions/auth@v1
         with:
@@ -44,4 +38,4 @@ jobs:
           gcloud container clusters get-credentials gke-production --region us-central1 --project ${{ secrets.GCP_PROJECT_ID_PRODUCTION }}
 
       - name: Aplicar Manifests
-        run: kubectl apply -f k8s/deployment-production.yml --validate=false
+        run: kubectl apply -f k8s/deployment-production.yml
