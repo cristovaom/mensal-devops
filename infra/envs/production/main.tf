@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0"
+    }
   }
 
   backend "gcs" {
@@ -23,17 +27,9 @@ provider "google" {
   credentials = var.google_credentials_json
 }
 
-provider "kubernetes" {
-  host                   = google_container_cluster.primary.endpoint
-  cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
-  token                  = data.google_client_config.default.access_token
-}
-
-provider "helm" {}
-
-
 data "google_client_config" "default" {}
 
+# MÓDULO GKE
 module "gke" {
   source     = "../../modules/gke"
   name       = "gke-production"
@@ -43,6 +39,33 @@ module "gke" {
   subnetwork = var.subnetwork
 }
 
+# PROVIDER KUBERNETES (com alias "gke")
+provider "kubernetes" {
+  alias                  = "gke"
+  host                   = module.gke.endpoint
+  cluster_ca_certificate = base64decode(module.gke.cluster_ca_certificate)
+  token                  = data.google_client_config.default.access_token
+}
+
+# PROVIDER HELM (usando alias e referenciando o provider Kubernetes acima)
+provider "helm" {
+  alias = "gke"
+
+  kubernetes {
+    host                   = module.gke.endpoint
+    cluster_ca_certificate = base64decode(module.gke.cluster_ca_certificate)
+    token                  = data.google_client_config.default.access_token
+  }
+}
+
+# MÓDULO MONITORAMENTO
 module "monitoring" {
   source = "../../modules/prometheus"
+
+  providers = {
+    helm       = helm.gke
+    kubernetes = kubernetes.gke
+  }
+
+  depends_on = [module.gke]
 }
