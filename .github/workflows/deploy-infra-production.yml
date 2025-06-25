@@ -33,3 +33,5 @@ jobs:
       - name: Aplicar Terraform
         run: terraform apply -auto-approve
         working-directory: infra/envs/production
+        env:
+          TF_VAR_google_credentials_json: ${{ secrets.GCP_CREDENTIALS_PRODUCTION }}
