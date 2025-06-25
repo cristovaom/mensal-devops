@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,13 +17,10 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v3
 
-      - name: Configurar repositório oficial do Google Cloud
-        run: |
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          sudo apt-get install -y apt-transport-https ca-certificates gnupg
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-sdk google-cloud-sdk-gke-gcloud-auth-plugin
+      - name: Instalar Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
 
       - name: Autenticar no GCP
         uses: google-github-actions/auth@v1
