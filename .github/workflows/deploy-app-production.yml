@@ -19,21 +19,9 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Instalar gke-gcloud-auth-plugin compatível
+      - name: Instalar gke-gcloud-auth-plugin via gcloud
         run: |
-          ARCH=$(uname -m)
-          if [ "$ARCH" = "x86_64" ]; then
-            ARCH="amd64"
-          elif [ "$ARCH" = "aarch64" ]; then
-            ARCH="arm64"
-          else
-            echo "Arquitetura não suportada: $ARCH"
-            exit 1
-          fi
-
-          curl -Lo gke-gcloud-auth-plugin https://storage.googleapis.com/artifacts.gke.io/gke-gcloud-auth-plugin/latest/gke-gcloud-auth-plugin-linux-$ARCH
-          chmod +x gke-gcloud-auth-plugin
-          sudo mv gke-gcloud-auth-plugin /usr/local/bin/
+          gcloud components install gke-gcloud-auth-plugin --quiet
 
       - name: Autenticar no GCP
         uses: google-github-actions/auth@v1
